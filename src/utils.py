@@ -78,11 +78,11 @@ def find_examples_for_dictionary(file_dictionary_path= DICTIONARY_PATH , min_len
     Finds example sentences for each word in a provided dictionary file and saves them in a specified format to a new file.
 
     Parameters:
-        file_dictionary_path (str): The path to the input dictionary file containing one word per line.
-        min_len (int): The minimum length of the example sentences to return (in words).
-        number_example (int): The number of example sentences to return for each word.
-        name_output (str): The name of the output file to save the examples to (without extension).
-        path (str): The path to the directory where the output file will be saved.
+        file_dictionary_path (str): The path to the input dictionary file containing one word per line. Defaults to DICTIONARY_PATH.
+        min_len (int): The minimum length of the example sentences to return (in words). Defaults to None.
+        number_example (int): The number of example sentences to return for each word. Defaults to None.
+        name_output (str): The name of the output file to save the examples to (without extension). Defaults to NAME_OUTPUT_MODE_2.
+        path (str): The path to the directory where the output file will be saved. Defaults to PATH.
         name_error (str): The name of the file to save words for which no examples were found. If None, no error file is created.
 
     Returns:
@@ -125,9 +125,9 @@ def save_word_with_one_example(file_dictionary_path = DICTIONARY_PATH,name_outpu
     Saves words from a dictionary file along with one example sentence for each word to an output file.
 
     Parameters:
-        file_dictionary_path (str): The path to the input dictionary file containing one word per line.
-        name_output (str): The name of the output file to save the words and their examples to (without extension).
-        path (str): The directory where the output file will be saved.
+        file_dictionary_path (str): The path to the input dictionary file containing one word per line. Defaults to DICTIONARY_PATH.
+        name_output (str): The name of the output file to save the words and their examples to (without extension). Defaults to NAME_OUTPUT_MODE_1.
+        path (str): The directory where the output file will be saved. Defaults to PATH.
         name_error (str): The name of the file to save words for which no examples were found. If None, no error file is created.
     
     Returns:
