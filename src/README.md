@@ -25,7 +25,7 @@ You can modify these in the `utils.py` file if needed.
 - `--file_dictionary_path`: Path to the input dictionary file. If not provided, uses the default DICTIONARY_PATH.
 - `--min_len`: (Mode 2 only) Minimum length of example sentences to return.
 - `--number_example`: (Mode 2 only) Number of example sentences to return for each word.
-
++ `--dict`: Dictionary to use. Options: {CAMBRIDGE,MERRIAM_WEBSTER,OXFORD}. If not provided, uses the default CAMBRIDGE.
 
 ## Functions
 + `create_dictionary`: Creates a simple dictionary and saves it to a text file.
