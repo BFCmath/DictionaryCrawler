@@ -1,17 +1,19 @@
 import argparse
 from utils import find_examples_for_dictionary, save_word_with_one_example, DICTIONARY_PATH, NAME_OUTPUT_MODE_1, NAME_OUTPUT_MODE_2
-
+from dictionary import DICTIONARY, DICT_ENUM
 def main(args):
     # Common parameters
     file_dictionary_path = args.file_dictionary_path or DICTIONARY_PATH
     name_output = args.name_output or (NAME_OUTPUT_MODE_1 if args.MODE == '1' else NAME_OUTPUT_MODE_2)
     name_error = args.name_error 
-
+    dict = args.dict or 'CAMBRIDGE'
+    dictionary = DICT_ENUM[dict]
     if args.MODE == '1':
         save_word_with_one_example(
             file_dictionary_path=file_dictionary_path,
             name_output=name_output,
-            name_error=name_error
+            name_error=name_error,
+            dictionary=dictionary
         )
     elif args.MODE == '2':
         find_examples_for_dictionary(
@@ -19,7 +21,8 @@ def main(args):
             name_output=name_output,
             name_error=name_error,
             min_len=args.min_len,
-            number_example=args.number_example
+            number_example=args.number_example,
+            dictionary=dictionary
         )
     else:
         print("Invalid mode. Use 1 or 2.")
@@ -35,7 +38,7 @@ if __name__ == "__main__":
     parser.add_argument('--file_dictionary_path', type=str, help="Path to the dictionary file")
     parser.add_argument('--min_len', type=int, help="Minimum length of example sentences (only for mode 2)")
     parser.add_argument('--number_example', type=int, help="Number of example sentences to return (only for mode 2)")
-
+    parser.add_argument('--dict',type=str, help="Dictionary to use", choices=['CAMBRIDGE', 'MERRIAM_WEBSTER', 'OXFORD'])
     args = parser.parse_args()
 
     # Call the main function with parsed arguments

@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from dictionary import * 
 import os
 PATH = os.getcwd()
 DATA_PATH = os.path.join(PATH, "data")
@@ -40,7 +41,7 @@ def create_dictionary(words=None,name="dictionary", path=DATA_PATH):
     
     print(f"File created successfully at: {file_path}")
     
-def crawl_example_sentences(word,min_len=None,number_example=None):
+def crawl_example_sentences(word,min_len=None,number_example=None, dictionary= CAMBRIDGE):
     """
     Crawls example sentences for a given word from the Merriam-Webster dictionary website.
 
@@ -48,11 +49,13 @@ def crawl_example_sentences(word,min_len=None,number_example=None):
         word (str): The word to search for.
         min_len (int): The minimum length of the example sentences to return. Defaults to None.
         number_example (int): The number of example sentences to return. Defaults to None.
+        dictionary (DICTIONARY): The dictionary to use. Defaults to CAMBRIDGE.
     Returns:
         List of example sentences.
     """
-    url = f'https://www.merriam-webster.com/dictionary/{word}'
-    response = requests.get(url)
+    class_dict = dictionary()
+    url = f'{class_dict.url}{word}'
+    response = requests.get(url,headers={"User-Agent":"a"})
 
     # Check if the request was successful
     if response.status_code == 200:
@@ -60,7 +63,7 @@ def crawl_example_sentences(word,min_len=None,number_example=None):
         soup = BeautifulSoup(page_content, 'html.parser')
 
         # Find all <span> elements with the specific class
-        spans = soup.find_all('span', class_='t has-aq')
+        spans = soup.find_all('span', class_=class_dict.cls_span)
 
         # Extract and return the text content ofinf each matching span
         sentences = [span.text.strip() for span in spans]
@@ -73,7 +76,7 @@ def crawl_example_sentences(word,min_len=None,number_example=None):
         print(f"Failed to retrieve the page. Status code: {response.status_code}")
         return []
 
-def find_examples_for_dictionary(file_dictionary_path= DICTIONARY_PATH , min_len=None, number_example=None, name_output=NAME_OUTPUT_MODE_2, path=PATH, name_error=None):
+def find_examples_for_dictionary(file_dictionary_path= DICTIONARY_PATH , min_len=None, number_example=None, name_output=NAME_OUTPUT_MODE_2, path=PATH, name_error=None, dictionary= CAMBRIDGE):
     """
     Finds example sentences for each word in a provided dictionary file and saves them in a specified format to a new file.
 
@@ -84,7 +87,8 @@ def find_examples_for_dictionary(file_dictionary_path= DICTIONARY_PATH , min_len
         name_output (str): The name of the output file to save the examples to (without extension). Defaults to NAME_OUTPUT_MODE_2.
         path (str): The path to the directory where the output file will be saved. Defaults to PATH.
         name_error (str): The name of the file to save words for which no examples were found. If None, no error file is created.
-
+        dictionary (DICTIONARY): The dictionary to use. Defaults to CAMBRIDGE.
+        
     Returns:
         word_error (list): A list of words for which no examples were found.
     """
@@ -99,7 +103,7 @@ def find_examples_for_dictionary(file_dictionary_path= DICTIONARY_PATH , min_len
     with open(output_file_path, "w") as output_file:
         for word in words:
             # Find example sentences for the word
-            example_sentences = crawl_example_sentences(word, min_len=min_len, number_example=number_example)
+            example_sentences = crawl_example_sentences(word, min_len=min_len, number_example=number_example, dictionary=dictionary)
             # Write the number of examples and the examples themselves, separated by a comma
             if example_sentences:
                 num_examples = len(example_sentences)
@@ -120,7 +124,7 @@ def find_examples_for_dictionary(file_dictionary_path= DICTIONARY_PATH , min_len
         print(f"Cannot find examples for {len(word_error)} word/words ")
     return word_error
 
-def save_word_with_one_example(file_dictionary_path = DICTIONARY_PATH,name_output=NAME_OUTPUT_MODE_1, path=PATH, name_error=None):
+def save_word_with_one_example(file_dictionary_path = DICTIONARY_PATH,name_output=NAME_OUTPUT_MODE_1, path=PATH, name_error=None, dictionary= CAMBRIDGE):
     """
     Saves words from a dictionary file along with one example sentence for each word to an output file.
 
@@ -129,7 +133,8 @@ def save_word_with_one_example(file_dictionary_path = DICTIONARY_PATH,name_outpu
         name_output (str): The name of the output file to save the words and their examples to (without extension). Defaults to NAME_OUTPUT_MODE_1.
         path (str): The directory where the output file will be saved. Defaults to PATH.
         name_error (str): The name of the file to save words for which no examples were found. If None, no error file is created.
-    
+        dictionary (DICTIONARY): The dictionary to use. Defaults to CAMBRIDGE.
+        
     Returns:
         list: A list of words for which no examples were found.
     """
@@ -144,7 +149,7 @@ def save_word_with_one_example(file_dictionary_path = DICTIONARY_PATH,name_outpu
     # Open the output file for writing
     with open(file_path, "w") as output_file:
         for word in words:
-            example_sentences = crawl_example_sentences(word, number_example=1)
+            example_sentences = crawl_example_sentences(word, number_example=1, dictionary=dictionary)
             if example_sentences:
               example = example_sentences[0] 
             else:
